@@ -18,7 +18,11 @@
                 <p>Sorry we dont have any categories to display currently. </p>
             } else
             {
-                <p>Returned Categories.</p>
+                foreach(var category in Model)
+                {
+                    <p>@category.CategoryName</p>
+                }
+                
             }
         }
     </div>

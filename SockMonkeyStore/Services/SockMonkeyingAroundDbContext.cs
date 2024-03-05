@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 
@@ -9,15 +10,26 @@ namespace SockMonkeyStore.Services
 {
     public class SockMonkeyingAroundDbContext : DbContext
     {
-        public DbSet<CategoryModel> Categories { get; set; }
-        public DbSet<CustomerAccountModel> CustomerAccounts { get; set; }
-        public DbSet<CustomerBillingProfileModel> CustomerBillingProfiles { get; set; }
-        public DbSet<CustomerCartItemModel> CustmoerCartItems { get; set; }
-        public DbSet<CustomerCartModel> CustomerCarts { get; set; }
-        public DbSet<CustomerShippingProfileModel> CustomerShippingProfiles { get; set; }
-        public DbSet<OrderInvoiceItemModel> OrderInvoiceItems { get; set; }
-        public DbSet<OrdersInvoiceModel> OrderInvoices { get; set; }
-        public DbSet<ProductCategoryModel> ProductCategories { get; set; }
-        public DbSet<ProductModel> Products { get; set; }
+        public SockMonkeyingAroundDbContext()
+           : base("name=SockMonkeyingAroundDbContext")
+        {
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            throw new UnintentionalCodeFirstException();
+        }
+
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<CustomerBillingProfile> CustomerBillingProfiles { get; set; }
+        public virtual DbSet<CustomerCart> CustomerCarts { get; set; }
+        public virtual DbSet<CustomerCartItem> CustomerCartItems { get; set; }
+        public virtual DbSet<CustomerShippingProfile> CustomerShippingProfiles { get; set; }
+        //public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<OrderInvoice> OrderInvoices { get; set; }
+        public virtual DbSet<OrderInvoiceItem> OrderInvoiceItems { get; set; }
+        public virtual DbSet<ProductCategory> ProductCategories{ get; set; }
+        public virtual DbSet<Product> Products { get; set; }
     }
 }

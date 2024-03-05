@@ -11,9 +11,9 @@ namespace SockMonkeyStore.Services
     {
         IEnumerable<Product> GetAllProducts();
 
-        ProductModel GetProduct(int id);
+        Product GetProduct(int id);
 
-        CategoryModel GetCategory(int id);
+        Category GetCategory(int id);
         IEnumerable<Product> GetProductsByCategory(int categoryId);
         IEnumerable<Category> GetAllCategories();
     }

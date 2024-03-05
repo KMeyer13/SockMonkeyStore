@@ -12,7 +12,7 @@ namespace SockMonkeyStore.Controllers
         // GET: Product
         public ActionResult Index()
         {
-            var items = new List<ProductModel>();
+            var items = new List<Product>();
             return View(items);
         }
     }

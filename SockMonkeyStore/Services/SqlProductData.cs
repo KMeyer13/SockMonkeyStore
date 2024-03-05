@@ -42,17 +42,17 @@ namespace SockMonkeyStore.Services
             throw new NotImplementedException();
         }
 
-        public CategoryModel GetCategory(int id)
+        public Category GetCategory(int id)
         {
             throw new NotImplementedException();
         }
 
-        public ProductModel GetProduct(int id)
+        public Product GetProduct(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ProductModel> GetProductsByCategory(int categoryId)
+        public IEnumerable<Product> GetProductsByCategory(int categoryId)
         {
             throw new NotImplementedException();
         }
