@@ -1,0 +1,25 @@
+﻿@model IEnumerable<SockMonkeyStore.Models.Category>
+
+@{
+    ViewBag.Title = "Home";
+}
+
+<main class="homeContent">
+    <section class="row" aria-labelledby="aspnetTitle">
+        <h1 id="title">Welcome to Sock Monekying Around!</h1>
+        <p class="lead">We are your one stop shop for all things Sock Monkey!</p>
+    </section>
+
+    <div>
+        <h3>Categories</h3>
+        @{
+        if (!Model.Any())
+            {
+                <p>Sorry we dont have any categories to display currently. </p>
+            } else
+            {
+                <p>Returned Categories.</p>
+            }
+        }
+    </div>
+</main>
