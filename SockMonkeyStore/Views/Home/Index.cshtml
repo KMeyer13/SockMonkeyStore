@@ -28,7 +28,8 @@
                                     <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                                         <div class="feature bg-gradient bg-gradient text-black rounded-3 mb-4 mt-n4">
                                             <img class="bi bi-collection" src="..\Content\SSM-Sock-Monkey-Sit-web.jpg" style="height:100px; width: 100px" />
-                                            <h2 class="fs-4 fw-bold" style="text-transform:capitalize">@category.CategoryName</h2>
+                                            <h2 class="fs-4 fw-bold" style="text-transform:capitalize">
+                                            @Html.ActionLink(category.CategoryName, "ProductByCategory", "Product",  new { Id = category.ID }, new {@class = "nav-link"})</h2>
                                         </div>
                                     </div>
                                 </div>

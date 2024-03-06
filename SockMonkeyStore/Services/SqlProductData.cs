@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -21,7 +22,7 @@ namespace SockMonkeyStore.Services
             SqlConnection connection = new SqlConnection("Data Source=d-playground01,5167;Initial Catalog=TrainingProject;Persist Security Info=True;User ID=sa;Password=43KdqA#56;Application Name=Kyles App");
             connection.Open();
             SqlCommand command = new SqlCommand("[Category].[gt_Category]", connection);
-            command.CommandType=System.Data.CommandType.StoredProcedure;
+            command.CommandType = CommandType.StoredProcedure;
             var reader = command.ExecuteReader();
             var response = new List<Category>();
             while (reader.Read())
@@ -38,8 +39,25 @@ namespace SockMonkeyStore.Services
 
         public IEnumerable<Product> GetAllProducts()
         {
-            //return (IEnumerable<Product>)_dbContext.Products.OrderBy(p => p.Name);
-            throw new NotImplementedException();
+            SqlConnection connection = new SqlConnection("Data Source=d-playground01,5167;Initial Catalog=TrainingProject;Persist Security Info=True;User ID=sa;Password=43KdqA#56;Application Name=Kyles App");
+            connection.Open();
+            SqlCommand command = new SqlCommand("[Product].[gt_Product]", connection);
+            command.CommandType = CommandType.StoredProcedure;
+            var reader = command.ExecuteReader();
+            var response = new List<Product>();
+            while (reader.Read())
+            {
+                var product = new Product();
+                product.ID = Convert.ToInt32(reader["ID"]);
+                product.Name = reader["Name"].ToString();
+                product.Description = reader["Description"].ToString();
+                product.Price = Convert.ToDecimal(reader["Price"]);
+                product.Quantity = Convert.ToInt32(reader["Quantity"]);
+                product.ImagePath = reader["ImagePath"].ToString();
+                response.Add(product);
+            }
+
+            return response;
         }
 
         public Category GetCategory(int id)
@@ -54,12 +72,26 @@ namespace SockMonkeyStore.Services
 
         public IEnumerable<Product> GetProductsByCategory(int categoryId)
         {
-            throw new NotImplementedException();
-        }
+            SqlConnection connection = new SqlConnection("Data Source=d-playground01,5167;Initial Catalog=TrainingProject;Persist Security Info=True;User ID=sa;Password=43KdqA#56;Application Name=Kyles App");
+            connection.Open();
+            SqlCommand command = new SqlCommand("[Product].[gt_ProductByCategory]", connection);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("categoryID", categoryId);
+            var reader = command.ExecuteReader();
+            var response = new List<Product>();
+            while (reader.Read())
+            {
+                var product = new Product();
+                product.ID = Convert.ToInt32(reader["ProductID"]);
+                product.Name = reader["Name"].ToString();
+                product.Description = reader["Description"].ToString();
+                product.Price = Convert.ToDecimal(reader["Price"]);
+                product.Quantity = Convert.ToInt32(reader["Quantity"]);
+                product.ImagePath = reader["ImagePath"].ToString();
+                response.Add(product);
+            }
 
-        IEnumerable<Product> IProductData.GetProductsByCategory(int categoryId)
-        {
-            throw new NotImplementedException();
+            return response;
         }
     }
 }

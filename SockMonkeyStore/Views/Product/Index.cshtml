@@ -4,7 +4,7 @@
     ViewBag.Title = "Products";
 }
 
-<h2>View</h2>
+<h2>Products</h2>
 
 @{ 
     if (!Model.Any())
@@ -13,6 +13,15 @@
     }
     else
     {
-                 
+        foreach (var monkey in Model)
+        {
+        <div>
+            <h2>@monkey.Name</h2>
+            <h3>@monkey.Price.ToString("C")</h3>
+            <h4>Quantity: @monkey.Quantity</h4>
+            <p>@monkey.Description</p>
+            <img src=@monkey.ImagePath  style="height:100px; width:auto;"/>
+        </div>
+        }
     }
- }
+}

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<SockMonkeyStore.Models.ProductCategoryViewModel>
+
+@{
+    ViewBag.Title = "Products";
+}
+
+<h2>Products</h2>
+
+@{
+    if (!Model.Any())
+    {
+        <h3>Sorry we dont curently have any items available for the category. Please check back soon!</h3>
+    }
+    else
+    {
+        foreach (var monkey in Model)
+        {
+            <div>
+                <h2>@monkey.Name</h2>
+                <h3>@monkey.Price.ToString("C")</h3>
+                <h4>Quantity: @monkey.Quantity</h4>
+                <p>@monkey.Description</p>
+                <img src=@monkey.ImagePath style="height:100px; width:auto;" />
+            </div>
+        }
+    }
+}
