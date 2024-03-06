@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SockMonkeyStore.Models.ProductCategoryViewModel>
+﻿@model IEnumerable<SockMonkeyStore.Models.Product>
 
 @{
     ViewBag.Title = "Products";
@@ -9,7 +9,7 @@
 @{
     if (!Model.Any())
     {
-        <h3>Sorry we dont curently have any items available for the category. Please check back soon!</h3>
+        <h3>Sorry we dont curently have any items available for that category. Please check back soon!</h3>
     }
     else
     {

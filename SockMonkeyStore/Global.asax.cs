@@ -23,6 +23,7 @@ namespace SockMonkeyStore
 
             // Register your types, for instance:
             container.Register<IProductData, SqlProductData>(Lifestyle.Scoped);
+            container.Register<CustomerData>(Lifestyle.Scoped);
 
             // This is an extension method from the integration package.
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
