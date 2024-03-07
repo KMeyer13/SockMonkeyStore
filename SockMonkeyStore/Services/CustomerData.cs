@@ -28,7 +28,7 @@ namespace SockMonkeyStore.Services
             return;
         }
 
-        public bool SignIn(string email, string password)
+        public string SignIn(string email)
         {
             SqlConnection connection = new SqlConnection("Data Source=d-playground01,5167;Initial Catalog=TrainingProject;Persist Security Info=True;User ID=sa;Password=43KdqA#56;Application Name=Kyles App");
             connection.Open();
@@ -36,9 +36,13 @@ namespace SockMonkeyStore.Services
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("Email", email);
             var reader = command.ExecuteReader();
-            var passwordHash = reader["PasswordHash"].ToString();
-            var verified = Crypto.VerifyHashedPassword(reader["PasswordHash"].ToString(), password);
-            return verified;
+            string passwordHash = "";
+            while(reader.Read())
+            {
+               passwordHash = reader["PasswordHash"].ToString();
+            }
+
+            return passwordHash;
         }
     }
 }

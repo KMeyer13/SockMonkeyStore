@@ -34,26 +34,40 @@ namespace SockMonkeyStore.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]  
         public ActionResult CreateAccount(CreateAccountViewModel newAccount)
         {
-            var user = new Account();
-            user.FirstName = newAccount.FirstName;
-            user.LastName = newAccount.LastName;
-            user.Email = newAccount.Email;
-            user.Phone = newAccount.Phone;
-            user.PasswordHash = CryptoHelper.Crypto.HashPassword(newAccount.Password);
-            db.CreateAccount(user);
-            return RedirectToAction("SignIn");
+            if (ModelState.IsValid)
+            {
+                var user = new Account();
+                user.FirstName = newAccount.FirstName;
+                user.LastName = newAccount.LastName;
+                user.Email = newAccount.Email;
+                user.Phone = newAccount.Phone;
+                user.PasswordHash = Crypto.HashPassword(newAccount.Password);
+                db.CreateAccount(user);
+                //auto log in once created
+                var newUser = new AccountSignInViewModel();
+                newUser.Email = newAccount.Email;
+                newUser.Password=newAccount.Password;
+                return SignIn(newUser);
+            }
+            return View(newAccount);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SignIn(AccountSignInViewModel newSignIn)
         {
-            var success = db.SignIn(newSignIn.Email, newSignIn.Password);
-            if(!success)
-            {
-                return View();
+            if(ModelState.IsValid) { 
+                var PasswordHash = db.SignIn(newSignIn.Email);
+                var verified = Crypto.VerifyHashedPassword(PasswordHash, newSignIn.Password);
+                if(verified)
+                {
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("", "Login Failed");
             }
-            return RedirectToAction("Index");
+            return View(newSignIn);  
         }
     }
 }
