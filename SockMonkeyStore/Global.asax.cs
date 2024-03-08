@@ -1,6 +1,7 @@
 ﻿using SimpleInjector;
 using SimpleInjector.Integration.Web;
 using SimpleInjector.Integration.Web.Mvc;
+using SockMonkeyStore.Models;
 using SockMonkeyStore.Services;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace SockMonkeyStore
             // Register your types, for instance:
             container.Register<IProductData, SqlProductData>(Lifestyle.Scoped);
             container.Register<CustomerData>(Lifestyle.Scoped);
+            container.Register<ITestAccount, TestAccount>(Lifestyle.Scoped);
 
             // This is an extension method from the integration package.
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());

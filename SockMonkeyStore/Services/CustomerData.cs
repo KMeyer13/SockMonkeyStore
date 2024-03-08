@@ -1,13 +1,7 @@
 ﻿using SockMonkeyStore.Models;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.Remoting.Messaging;
-using System.Web.Helpers;
+using System.Data.SqlClient;
 
 namespace SockMonkeyStore.Services
 {
@@ -28,7 +22,7 @@ namespace SockMonkeyStore.Services
             return;
         }
 
-        public string SignIn(string email)
+        public Account SignIn(string email)
         {
             SqlConnection connection = new SqlConnection("Data Source=d-playground01,5167;Initial Catalog=TrainingProject;Persist Security Info=True;User ID=sa;Password=43KdqA#56;Application Name=Kyles App");
             connection.Open();
@@ -36,13 +30,17 @@ namespace SockMonkeyStore.Services
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("Email", email);
             var reader = command.ExecuteReader();
-            string passwordHash = "";
-            while(reader.Read())
+            Account user = new Account();
+            while (reader.Read())
             {
-               passwordHash = reader["PasswordHash"].ToString();
+                user.PasswordHash = reader["PasswordHash"].ToString();
+                user.FirstName = reader["FirstName"].ToString();
+                user.LastName = reader["LastName"].ToString();
+                user.Email = reader["Email"].ToString();
+                user.ID = Convert.ToInt32(reader["ID"]);
             }
 
-            return passwordHash;
+            return user;
         }
     }
 }

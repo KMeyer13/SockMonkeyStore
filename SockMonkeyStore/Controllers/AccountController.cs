@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using SockMonkeyStore.Models;
-using System.Web.Mvc;
+﻿using SockMonkeyStore.Models;
 using SockMonkeyStore.Services;
+using System;
 using System.Web.Helpers;
+using System.Web.Mvc;
+using System.Web.Security;
 
 namespace SockMonkeyStore.Controllers
 {
     public class AccountController : Controller
     {
         readonly CustomerData db;
+        ITestAccount testAccount;
 
-        public AccountController(CustomerData db)
+        public AccountController(CustomerData db, ITestAccount testAccount)
         {
             this.db = db;
+            this.testAccount = testAccount; 
         }
         // GET: Account
         public ActionResult Index()
         {
+            var x = testAccount;
             return View();
         }
 
@@ -33,8 +34,18 @@ namespace SockMonkeyStore.Controllers
             return View();
         }
 
+        public ActionResult BillingProfileView()
+        {
+            return View();
+        }
+
+        public ActionResult ShippingProfileView()
+        {
+            return View();
+        }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]  
+        [ValidateAntiForgeryToken]
         public ActionResult CreateAccount(CreateAccountViewModel newAccount)
         {
             if (ModelState.IsValid)
@@ -49,7 +60,7 @@ namespace SockMonkeyStore.Controllers
                 //auto log in once created
                 var newUser = new AccountSignInViewModel();
                 newUser.Email = newAccount.Email;
-                newUser.Password=newAccount.Password;
+                newUser.Password = newAccount.Password;
                 return SignIn(newUser);
             }
             return View(newAccount);
@@ -58,16 +69,41 @@ namespace SockMonkeyStore.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SignIn(AccountSignInViewModel newSignIn)
         {
-            if(ModelState.IsValid) { 
-                var PasswordHash = db.SignIn(newSignIn.Email);
-                var verified = Crypto.VerifyHashedPassword(PasswordHash, newSignIn.Password);
-                if(verified)
-                {
-                    return RedirectToAction("Index");
-                }
+            if (!ModelState.IsValid)
+            {
                 ModelState.AddModelError("", "Login Failed");
+                return View(newSignIn);
             }
-            return View(newSignIn);  
+            var signedInUser = db.SignIn(newSignIn.Email);
+            var verified = Crypto.VerifyHashedPassword(signedInUser.PasswordHash, newSignIn.Password);
+            TestAccount account = new TestAccount();
+            if (verified)
+            {
+                
+                account.Email = signedInUser.Email;
+                account.FirstName = signedInUser.FirstName;
+                account.LastName = signedInUser.LastName;
+                account.ID = signedInUser.ID;
+
+                //return RedirectToAction("Index");
+            }
+
+            var ticket = new FormsAuthenticationTicket(
+                1,
+                "KyleAuth",
+                DateTime.Now,
+                DateTime.Now.AddDays(1),
+                true,
+                $"Account: {account.ID} Email: {account.Email}"
+                );
+            string encTicket = FormsAuthentication.Encrypt(ticket);
+            var cookie = FormsAuthentication.GetAuthCookie(
+                        "KyleAuth", true);
+            cookie.Name = "KyleAuth";
+            cookie.Value = encTicket;
+            HttpContext.Response.Cookies.Add(cookie);
+
+            return View(newSignIn);
         }
     }
 }
